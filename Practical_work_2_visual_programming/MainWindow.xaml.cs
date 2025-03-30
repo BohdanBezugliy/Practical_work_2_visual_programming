@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Practical_work_2_visual_programming;
 
@@ -17,40 +18,69 @@ namespace Practical_work_2_visual_programming;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private RotateTransform3D myYRotate, myZRotate, myYRotate2, myZRotate2;
+    private AxisAngleRotation3D myYAxis, myZAxis, myYAxis2, myZAxis2;
+
+    private Transform3DGroup myTransform1, myTransform2;
+    private DispatcherTimer MyTimer;
+    private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        InitializeComponent();
         myYRotate = new RotateTransform3D();
         myYAxis = new AxisAngleRotation3D();
         myYAxis.Axis = new Vector3D(0, 1, 0);
-        myYAxis.Angle = 7;
+        myYAxis.Angle = 0;
         myYRotate.Rotation = myYAxis;
 
-        myXRotate = new RotateTransform3D();
-        myXAxis = new AxisAngleRotation3D();
-        myXAxis.Axis = new Vector3D(1, 0, 0);
-        myXAxis.Angle = 7;
-        myXRotate.Rotation = myXAxis;
-
         myTransform1 = new Transform3DGroup();
-        myTransform2 = new Transform3DGroup();
+        myModel.Transform = myTransform1;
 
-        MyModel.Transform = myTransform1;
-        MyModel2.Transform = myTransform2;
-    }
-    private RotateTransform3D myXRotate, myYRotate;
-    private AxisAngleRotation3D myXAxis, myYAxis;
-    private Transform3DGroup myTransform1, myTransform2;
-    private void button1_Click(object sender, RoutedEventArgs e)
-    {
+        myZRotate = new RotateTransform3D();
+        myZAxis = new AxisAngleRotation3D();
+        myZAxis.Axis = new Vector3D(0, 0, 1);
+        myZAxis.Angle = 0;
+        myZRotate.Rotation = myZAxis;
+
         myTransform1.Children.Add(myYRotate);
+        myTransform1.Children.Add(myZRotate);
+
+        myYRotate2 = new RotateTransform3D();
+        myYAxis2 = new AxisAngleRotation3D();
+        myYAxis2.Axis = new Vector3D(0, 1, 0);
+        myYAxis2.Angle = 0;
+        myYRotate2.Rotation = myYAxis2;
+        myZRotate2 = new RotateTransform3D();
+        myZAxis2 = new AxisAngleRotation3D();
+        myZAxis2.Axis = new Vector3D(0, 0, 1);
+        myZAxis2.Angle = 0;
+        myZRotate2.Rotation = myZAxis2;
+        myTransform2 = new Transform3DGroup();
+        MyModel2.Transform = myTransform2;
+
+        myTransform2.Children.Add(myYRotate2);
+        myTransform2.Children.Add(myZRotate2);
+
+        MyTimer = new DispatcherTimer();
+        MyTimer.Tick += new EventHandler(My_Timer_tick);
+        MyTimer.Interval = new TimeSpan(100000);
     }
-    private void button2_Click(object sender, RoutedEventArgs e)
+    private void Button_Click_1(object sender, RoutedEventArgs e)
     {
-        myTransform2.Children.Add(myXRotate);
+        MyTimer.Stop();
     }
-    private void button3_Click(object sender, RoutedEventArgs e)
+
+    private void Button_Click(object sender, RoutedEventArgs e)
     {
-        myTransform1.Children.Add(myXRotate);
+        MyTimer.Start();
+    }
+    private void My_Timer_tick(object sender, EventArgs e)
+    {
+        myYAxis.Angle += 1;
+        myZAxis.Angle += 1;
+        myYAxis2.Angle -= 2;
+        myZAxis2.Angle -= 2;
+    }
+    public MainWindow()
+    {
+        InitializeComponent();
     }
 }
