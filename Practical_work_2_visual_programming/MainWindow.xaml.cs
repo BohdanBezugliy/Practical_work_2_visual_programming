@@ -45,12 +45,10 @@ public partial class MainWindow : Window
     {
         myTransform1.Children.Add(myYRotate);
     }
-
     private void button2_Click(object sender, RoutedEventArgs e)
     {
         myTransform2.Children.Add(myXRotate);
     }
-
     private void button3_Click(object sender, RoutedEventArgs e)
     {
         myTransform1.Children.Add(myXRotate);
